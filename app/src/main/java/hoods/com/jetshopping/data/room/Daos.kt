@@ -83,6 +83,7 @@ interface ListDao{
     :Flow<ItemsWithStoreAndList>
 }
 
+
 data class ItemsWithStoreAndList(
     @Embedded val item: Item,
     @Embedded val shoppingList: ShoppingList,
