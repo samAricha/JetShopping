@@ -3,6 +3,7 @@ package hoods.com.jetshopping.presentation.home
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,15 +15,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hoods.com.jetshopping.data.room.ItemsWithStoreAndList
+import hoods.com.jetshopping.data.room.models.Item
 import hoods.com.jetshopping.ui.Category
 import hoods.com.jetshopping.ui.Utils
 import hoods.com.jetshopping.ui.theme.Shapes
+import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -55,6 +62,18 @@ fun HomeScreen(
                     }
                 }
             }
+
+            items(homeState.items){
+
+                ShoppingItems(item = it,
+                    isChecked = it.item.isChecked,
+                    onCheckedChange = homeViewModel::onItemCheckedChange
+                ) {
+                    onNavigate.invoke(it.item.id)
+                }
+
+            }
+
         }
 
     }
@@ -106,3 +125,67 @@ fun CategoryItem(
     }
 
 }
+
+@Composable
+fun ShoppingItems(
+    item: ItemsWithStoreAndList,
+    isChecked: Boolean,
+    onCheckedChange: (Item, Boolean) -> Unit,
+    onItemClick: () -> Unit
+){
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onItemClick.invoke()
+            }
+            .padding(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = item.item.itemName,
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.size(4.dp))
+                Text(text = item.store.storeName)
+                Spacer(modifier = Modifier.size(4.dp))
+                CompositionLocalProvider(
+                    LocalContentAlpha provides
+                            ContentAlpha.disabled
+                ) {
+                    Text(text = formatDate(item.item.date),
+                        style = MaterialTheme.typography.subtitle1)
+
+                }
+                
+            }
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(text = "Qty: ${item.item.qty}",
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.size(4.dp))
+                Checkbox(
+                    checked = isChecked,
+                    onCheckedChange = {
+                                      onCheckedChange.invoke(item.item, it)
+
+
+                    },
+                )
+            }
+        }
+
+    }
+
+
+}
+
+fun formatDate(date: Date): String =
+    SimpleDateFormat("yyy-MM-dd", Locale.getDefault()).format(date)
