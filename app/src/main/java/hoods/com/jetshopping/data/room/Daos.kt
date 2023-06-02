@@ -3,6 +3,7 @@ package hoods.com.jetshopping.data.room
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -53,6 +54,7 @@ interface StoreDao{
 }
 
 
+@Entity
 @Dao
 interface ListDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
