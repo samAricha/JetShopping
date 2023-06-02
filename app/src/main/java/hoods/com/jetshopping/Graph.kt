@@ -19,6 +19,6 @@ object Graph {
     }
 
     fun provideDb(context: Context){
-        ShoppingListDatabase.getDatabase(context)
+        db = ShoppingListDatabase.getDatabase(context)
     }
 }
