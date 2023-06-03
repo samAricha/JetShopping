@@ -188,6 +188,7 @@ fun DetailEntry(
                 onValueChange = {onQtyChange(it)},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "Qty") },
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent
