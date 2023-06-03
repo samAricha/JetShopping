@@ -4,6 +4,7 @@ import hoods.com.jetshopping.data.room.ItemDao
 import hoods.com.jetshopping.data.room.ListDao
 import hoods.com.jetshopping.data.room.StoreDao
 import hoods.com.jetshopping.data.room.models.Item
+import hoods.com.jetshopping.data.room.models.ShoppingList
 import hoods.com.jetshopping.data.room.models.Store
 
 //Repository is for connecting between data layer and UI layer
@@ -31,6 +32,9 @@ class Repository(
 
     //the following are functions that are going to help us insert/save our data
 
+    suspend fun insertList(shoppingList: ShoppingList){
+        listDao.insertShoppingList(shoppingList)
+    }
     suspend fun insertStore(store: Store){
 
         storeDao.insert(store)
